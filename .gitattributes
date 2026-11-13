@@ -1,2 +1,3 @@
 *.png binary
+*.ipynb linguist-detectable=true linguist-documentation=false
 /app/web/style.css linguist-generated=true

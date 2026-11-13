@@ -19,4 +19,4 @@ Install `requirements.lock`, then run `python -m pytest -q`. Install Node 24+, r
 
 ## Notebook and Tailwind update
 
-Three substantive notebooks (16 executed code cells) now cover baseline analysis, deeper experiments and operational audits. All code cells executed with saved outputs; no error outputs remain. Tailwind CSS 4.3.5 builds successfully. DOM workflow checks pass after the UI changes. GitHub uses normal notebook language detection; only compiler-generated CSS is marked generated.
+Three substantive notebooks (16 executed code cells) now cover baseline analysis, deeper experiments and operational audits. All code cells executed with saved outputs; no error outputs remain. Tailwind CSS 4.3.5 builds successfully. DOM workflow checks pass after the UI changes. GitHub notebook inclusion is explicitly enabled without overriding its detected language; only compiler-generated CSS is marked generated.

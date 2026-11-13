@@ -130,7 +130,7 @@ npm run build:css
 npm run dev:css
 ```
 
-Commit both the stylesheet source and compiled output after UI changes. GitHub correctly treats the compiled CSS as generated; notebooks are detected normally.
+Commit both the stylesheet source and compiled output after UI changes. GitHub correctly treats the compiled CSS as generated; executable notebooks are explicitly included in GitHub language statistics under their detected file type.
 
 ## Design and implementation
 
