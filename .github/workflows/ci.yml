@@ -17,4 +17,6 @@ jobs:
           node-version: "24"
           cache: npm
       - run: npm ci
+      - run: npm run build:css
+      - run: git diff --exit-code -- app/web/style.css
       - run: npm run test:ui

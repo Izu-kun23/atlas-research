@@ -30,7 +30,7 @@ python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
 ```
 
-Open **http://localhost:8001**. Interactive OpenAPI documentation: **http://localhost:8001/docs**. No Node build, CDN, cloud database or frontend keys required. The responsive frontend uses semantic HTML, local CSS and browser JavaScript, served from the same origin as the API.
+Open **http://localhost:8001**. Interactive OpenAPI documentation: **http://localhost:8001/docs**. The compiled Tailwind stylesheet is checked in, so running the app needs no Node build, CDN, cloud database or frontend keys. The responsive frontend uses semantic HTML, Tailwind CSS and browser JavaScript, served from the same origin as the API.
 
 ## Architecture
 
@@ -69,7 +69,7 @@ HTTP routes validate inputs and delegate to services. Domain code contains the c
 
 All endpoints are documented and callable in `/docs`. Errors use standard FastAPI status codes and a `detail` payload. `GET /api/health` is available for health checks.
 
-## Notebook and verification
+## Notebook-led analysis and verification
 
 ```bash
 python -m pip install -r requirements.lock
@@ -81,7 +81,7 @@ python -m pip install jupyterlab
 python -m jupyter lab notebooks
 ```
 
-Open the notebook and choose **Run All**. Checked-in outputs are generated from real executions on bundled data, not hand-entered results. See [verification](docs/verification.md) for measured outcomes and scope.
+The three notebooks in [notebooks/](notebooks/README.md) cover the baseline analysis, deeper experiments and operational audits. Open them in numerical order and choose **Run All**. Checked-in outputs are generated from real executions on bundled data, not hand-entered results. See [verification](docs/verification.md) for measured outcomes and scope.
 
 ## Configuration and limitations
 
@@ -118,6 +118,19 @@ The container runs as a non-root user. Data is ephemeral unless a writable volum
 ## Deployment boundary
 
 This is a functioning local portfolio application, not a multi-tenant production service. There is no authentication or per-user isolation. Keep the default localhost binding; add authentication, rate limiting, request budgets, TLS, structured observability and an egress policy before public deployment. External API usage should have spend limits. Notebook results are small-data evidence, not production benchmarks.
+
+## Tailwind UI development
+
+Each interface uses **Tailwind CSS 4**, compiled locally rather than loaded from a CDN. The source is `app/web/tailwind.css`; `@apply` defines rounded cards, controls, tables and dashboard chrome, while HTML utilities handle typography and layout. Each product uses one accent palette and neutral surfaces.
+
+```bash
+npm ci
+npm run build:css
+# Watch while editing:
+npm run dev:css
+```
+
+Commit both the stylesheet source and compiled output after UI changes. GitHub correctly treats the compiled CSS as generated; notebooks are detected normally.
 
 ## Design and implementation
 

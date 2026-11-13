@@ -1,2 +1,2 @@
-*.ipynb linguist-documentation=true
 *.png binary
+/app/web/style.css linguist-generated=true

@@ -2,9 +2,13 @@
   "name": "atlas-research-ui-checks",
   "private": true,
   "scripts": {
-    "test:ui": "node tests/ui.cjs"
+    "test:ui": "node tests/ui.cjs",
+    "build:css": "tailwindcss -i ./app/web/tailwind.css -o ./app/web/style.css --minify",
+    "dev:css": "tailwindcss -i ./app/web/tailwind.css -o ./app/web/style.css --watch"
   },
   "devDependencies": {
-    "jsdom": "31.0.1"
+    "jsdom": "31.0.1",
+    "tailwindcss": "4.3.5",
+    "@tailwindcss/cli": "4.3.5"
   }
 }
