@@ -4,13 +4,13 @@ A bounded multi-stage research assistant that retrieves sources, ranks evidence,
 
 ![Executed notebook analysis](docs/analysis.png)
 
-**LangGraph orchestration · TF-IDF retrieval · optional OpenAI web search · SQLite report history**
+**LangGraph orchestration · TF-IDF retrieval · NVIDIA NIM inference · keyless Wikipedia retrieval · SQLite report history**
 
 ## What it does
 
 - Five explicit LangGraph nodes with duration traces and bounded execution.
 - Offline mode runs without credentials using a clearly labelled fixed retrieval/AI corpus.
-- Live mode uses OpenAI web search and an LLM summary over provider-cited excerpts.
+- Live mode retrieves real Wikipedia introductory excerpts without a search key, then uses NVIDIA Nemotron to summarize and review them. Source links include revision IDs when available.
 - Live mode adds a separate LLM entailment review after deterministic excerpt validation. This is a conservative second pass, not a guarantee of truth.
 - Verifier rejects nonexistent source IDs and quotations absent from source records.
 - Dashboard includes source provenance, recent investigations and Markdown export.
@@ -85,9 +85,24 @@ Open the notebook and choose **Run All**. Checked-in outputs are generated from 
 
 ## Configuration and limitations
 
-Default: `RESEARCH_MODE=demo`. For live research, set `RESEARCH_MODE=live`, `OPENAI_API_KEY`, and optionally `OPENAI_MODEL` in your shell. The application does **not** automatically load `.env`; use `uvicorn --env-file .env` with `python-dotenv` installed, or export variables. API usage incurs provider charges. No browser-side keys.
+Default: `RESEARCH_MODE=demo` (fully offline). Live mode uses NVIDIA's free prototype endpoint. Create a key at [NVIDIA Build](https://build.nvidia.com/settings/api-keys), then export:
 
-The local retrieval layer uses sparse TF-IDF, not an embedding database. The specialized agents are bounded processing roles in a graph, not autonomous agents with arbitrary tools. Demo findings are extractive paraphrases. Live evidence consists of provider-cited excerpts, not independently downloaded documents. Exact quote validation establishes provenance, not semantic entailment or factual truth. Small excerpts can omit context. No fake confidence score is presented.
+```bash
+export NVIDIA_API_KEY='your-nvidia-key'
+export NVIDIA_MODEL='nvidia/nemotron-3.5-lightning-30b-a3b'
+export RESEARCH_MODE=live
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+```
+
+PowerShell: use `$env:NVIDIA_API_KEY='...'`, `$env:NVIDIA_MODEL='...'` and `$env:RESEARCH_MODE='live'`. The application does not automatically load `.env`; export variables, or install `python-dotenv` and use `uvicorn --env-file .env`.
+
+The model's [NVIDIA catalog page](https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b/build) lists a free endpoint as of 13 November 2026. Free prototype access is account- and rate-limited; availability can change. This is not a promise of unlimited free production hosting. There is **no automatic paid-provider fallback** and no OpenAI service call. The `openai` package is only an OpenAI-compatible HTTP client pointed at `https://integrate.api.nvidia.com/v1`.
+
+Each live run makes one keyless Wikipedia retrieval request and up to two NVIDIA completions: summary and independent entailment review. Requests have token, source-size and timeout budgets, and do not automatically retry model calls. A missing key returns a setup error; exhausted access and rate limits return clear messages without exposing credentials. Keys stay on the server and must never be committed.
+
+Free source retrieval searches **English Wikipedia only**, not the entire web. Introductory excerpts are secondary evidence and may be incomplete or unsuitable for recent/niche questions. Original source URLs and revision timestamps are preserved. A zero-result search fails explicitly; the model cannot fabricate substitute citations.
+
+The local retrieval layer uses sparse TF-IDF, not an embedding database. The specialized agents are bounded processing roles in a graph, not autonomous agents with arbitrary tools. Demo findings are extractive paraphrases. Live evidence consists of real introductory excerpts from the Wikipedia API, bounded to six sources of 3,500 characters each. Exact quote validation establishes provenance, not semantic entailment or factual truth. Small excerpts can omit context. No fake confidence score is presented.
 
 Local persistence lives in `data/`; runtime database/model files and secrets are excluded from git. Configuration variables are described in `.env.example`.
 

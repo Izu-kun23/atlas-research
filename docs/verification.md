@@ -2,7 +2,7 @@
 
 Verified on 13 November 2026 with Python 3.12.
 
-- 4 pytest regression tests passed.
+- 14 pytest regression tests passed, including mocked NVIDIA wire-protocol and Wikipedia retrieval tests.
 - Python source compilation passed.
 - DOM integration checks passed for rendered metrics, primary form submission, result rendering, error states, text escaping and button reset.
 - All notebook code cells executed in an isolated IPython process and saved with outputs. Socket-based Jupyter kernels were unavailable in the build environment; the notebooks retain a normal Python 3 kernelspec for local Jupyter use.
@@ -11,7 +11,7 @@ Verified on 13 November 2026 with Python 3.12.
 
 ## Measured results
 
-Offline graph completes five stages, reviews four fixed source records and retains four extractive findings. Unknown source IDs and fabricated excerpts are rejected in regression tests. A mocked live entailment pass also filters unsupported interpretations. **No paid/live OpenAI request was executed**; credentials are required to verify the live provider integration. No claim of general factual accuracy is made.
+Offline graph completes five stages, reviews four fixed source records and retains four extractive findings. Unknown source IDs and fabricated excerpts are rejected in regression tests. A mocked live entailment pass also filters unsupported interpretations. **No live NVIDIA inference request was executed**; NVIDIA_API_KEY is not configured. MockTransport tests verify the real SDK request URL, model, JSON response validation and source retrieval without API charges. No claim of general factual accuracy is made.
 
 ## Reproduce
 

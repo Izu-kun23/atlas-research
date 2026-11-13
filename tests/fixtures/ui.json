@@ -2,11 +2,14 @@
   "/config": {
     "mode": "demo",
     "live_ready": false,
+    "provider": "NVIDIA NIM",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "source_provider": "Wikipedia API (no search key required)",
     "stages": 5
   },
   "/reports": [],
   "/research": {
-    "id": "70834053-ebbd-4876-95d6-104cfad84fb6",
+    "id": "c45b34c5-e782-4a97-b25a-1177a03896a2",
     "topic": "How does retrieval improve research reliability?",
     "mode": "demo",
     "sources": [
@@ -69,27 +72,27 @@
         "verification": "Citation and verbatim evidence validated; semantic truth not independently verified"
       }
     ],
-    "report": "# How does retrieval improve research reliability?\n\nMode: demo\n\n## Findings\n\nBEIR provides a heterogeneous benchmark for evaluating information retrieval models. [S3]\n> BEIR provides a heterogeneous benchmark for evaluating information retrieval models.\n\nRetrieval-augmented generation combines parametric and non-parametric memory for language generation. [S1]\n> Retrieval-augmented generation combines parametric and non-parametric memory for language generation.\n\nLanguage model performance can vary with the position of relevant information in the input context. [S2]\n> Language model performance can vary with the position of relevant information in the input context.\n\nBM25 is a ranking function within the probabilistic relevance framework. [S4]\n> BM25 is a ranking function within the probabilistic relevance framework.\n\n## Sources\n\n[S3] BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models \u2014 https://arxiv.org/abs/2104.08663\n[S1] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks \u2014 https://arxiv.org/abs/2005.11401\n[S2] Lost in the Middle: How Language Models Use Long Contexts \u2014 https://arxiv.org/abs/2307.03172\n[S4] The Probabilistic Relevance Framework: BM25 and Beyond \u2014 https://doi.org/10.1561/1500000019\n\n## Limitations\nOffline demo uses a fixed retrieval-focused corpus and extractive summaries. Live findings use provider-cited excerpts. Excerpt validation establishes provenance, not semantic entailment or real-world truth. No autonomous browsing or tool execution from source text.",
+    "report": "# How does retrieval improve research reliability?\n\nMode: demo\n\n## Findings\n\nBEIR provides a heterogeneous benchmark for evaluating information retrieval models. [S3]\n> BEIR provides a heterogeneous benchmark for evaluating information retrieval models.\n\nRetrieval-augmented generation combines parametric and non-parametric memory for language generation. [S1]\n> Retrieval-augmented generation combines parametric and non-parametric memory for language generation.\n\nLanguage model performance can vary with the position of relevant information in the input context. [S2]\n> Language model performance can vary with the position of relevant information in the input context.\n\nBM25 is a ranking function within the probabilistic relevance framework. [S4]\n> BM25 is a ranking function within the probabilistic relevance framework.\n\n## Sources\n\n[S3] BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models \u2014 https://arxiv.org/abs/2104.08663\n[S1] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks \u2014 https://arxiv.org/abs/2005.11401\n[S2] Lost in the Middle: How Language Models Use Long Contexts \u2014 https://arxiv.org/abs/2307.03172\n[S4] The Probabilistic Relevance Framework: BM25 and Beyond \u2014 https://doi.org/10.1561/1500000019\n\n## Limitations\nOffline demo uses a fixed retrieval-focused corpus and extractive summaries. Live mode retrieves Wikipedia introductory excerpts and uses NVIDIA NIM for synthesis and a separate entailment review. Wikipedia is a secondary source; coverage and excerpts can be incomplete. Evidence matching and model review do not establish real-world truth. No tools are invoked by source text.",
     "trace": [
       {
         "agent": "Research agent",
         "detail": "Retrieved 4 source records",
-        "duration_ms": 0.11
+        "duration_ms": 0.19
       },
       {
         "agent": "Analysis agent",
         "detail": "Ranked evidence with local TF-IDF retrieval",
-        "duration_ms": 2.31
+        "duration_ms": 2.97
       },
       {
         "agent": "Summary agent",
         "detail": "Prepared 4 candidate findings",
-        "duration_ms": 0.03
+        "duration_ms": 0.01
       },
       {
         "agent": "Evidence-check agent",
         "detail": "4 accepted; 0 rejected",
-        "duration_ms": 0.03
+        "duration_ms": 0.01
       },
       {
         "agent": "Report agent",
@@ -100,7 +103,7 @@
     "verification": {
       "accepted": 4,
       "rejected": 0,
-      "scope": "Citation existence and exact excerpt matching; not independent factual verification"
+      "scope": "Citation and excerpt matching; live mode adds a separate LLM entailment review. Not independent factual verification"
     }
   }
 }

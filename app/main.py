@@ -26,6 +26,8 @@ from fastapi import HTTPException
 from fastapi.responses import Response
 from app.services.workflow import build_graph
 from app.infrastructure.repository import Reports
+from app.infrastructure.providers import model_name
+from openai import APIStatusError, APITimeoutError
 
 reports = Reports()
 graph = build_graph()
@@ -39,7 +41,10 @@ class Question(BaseModel):
 def config():
     return {
         "mode": os.getenv("RESEARCH_MODE", "demo"),
-        "live_ready": bool(os.getenv("OPENAI_API_KEY")),
+        "live_ready": bool(os.getenv("NVIDIA_API_KEY", "").strip()),
+        "provider": "NVIDIA NIM",
+        "model": model_name(),
+        "source_provider": "Wikipedia API (no search key required)",
         "stages": 5,
     }
 
@@ -54,10 +59,33 @@ def run(body: Question):
     mode = os.getenv("RESEARCH_MODE", "demo")
     if mode not in {"demo", "live"}:
         raise HTTPException(400, "RESEARCH_MODE must be demo or live")
+    if mode == "live" and not os.getenv("NVIDIA_API_KEY", "").strip():
+        raise HTTPException(
+            503,
+            "Add NVIDIA_API_KEY on the server to enable live research. Demo mode needs no key.",
+        )
     try:
         state = graph.invoke(
             {"topic": body.topic, "mode": mode, "trace": []}, {"recursion_limit": 10}
         )
+    except APITimeoutError as exc:
+        raise HTTPException(
+            504, "NVIDIA timed out. Try again later; free endpoints may be busy."
+        ) from exc
+    except APIStatusError as exc:
+        detail = {
+            401: "NVIDIA rejected the API key. Check NVIDIA_API_KEY.",
+            403: "NVIDIA model access is unavailable for this account.",
+            402: "NVIDIA free access or credits are exhausted. No paid fallback was attempted.",
+            404: "NVIDIA model is unavailable. Choose a current free model in NVIDIA_MODEL.",
+            429: "NVIDIA's free endpoint is rate limited. Wait before retrying.",
+        }.get(exc.status_code, "NVIDIA inference is temporarily unavailable.")
+        raise HTTPException(503, detail) from exc
+    except ValueError as exc:
+        raise HTTPException(
+            502,
+            "Research could not obtain valid source evidence or model JSON. Try a shorter topic.",
+        ) from exc
     except Exception as exc:
         raise HTTPException(
             502, "Research failed. Check provider configuration and server logs."

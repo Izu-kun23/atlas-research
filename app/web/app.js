@@ -91,6 +91,10 @@ stats([
   ["Reports", "—", "Persistent local history"],
 ]);
 api("/config")
-  .then((d) => ($("mode").textContent = d.mode.toUpperCase() + " MODE"))
+  .then(
+    (d) =>
+      ($("mode").textContent =
+        "NVIDIA NIM · " + d.mode.toUpperCase() + " MODE"),
+  )
   .catch((e) => message(e.message, true));
 history().catch((e) => message(e.message, true));

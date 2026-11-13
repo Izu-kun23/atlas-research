@@ -140,7 +140,7 @@ def report(state):
         [
             "",
             "## Limitations",
-            "Offline demo uses a fixed retrieval-focused corpus and extractive summaries. Live findings use provider-cited excerpts. Excerpt validation establishes provenance, not semantic entailment or real-world truth. No autonomous browsing or tool execution from source text.",
+            "Offline demo uses a fixed retrieval-focused corpus and extractive summaries. Live mode retrieves Wikipedia introductory excerpts and uses NVIDIA NIM for synthesis and a separate entailment review. Wikipedia is a secondary source; coverage and excerpts can be incomplete. Evidence matching and model review do not establish real-world truth. No tools are invoked by source text.",
         ]
     )
     return {
