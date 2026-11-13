@@ -48,8 +48,22 @@ def analyse(state):
         ],
         key=lambda s: -s["relevance"],
     )
+    if state["mode"] == "live":
+        ranked = [source for source in ranked if source["relevance"] > 0.01]
+        if not ranked:
+            raise ValueError("No sufficiently relevant source excerpts")
+    coverage = [
+        {
+            **item,
+            "selected": sum(
+                source.get("provider") == item["provider"] for source in ranked
+            ),
+        }
+        for item in state.get("source_coverage", [])
+    ]
     return {
         "sources": ranked,
+        "source_coverage": coverage,
         "trace": event(
             state,
             "Analysis agent",

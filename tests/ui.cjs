@@ -56,6 +56,7 @@ async function submit(dom, id) {
     assert.match(d.getElementById("report").textContent, /Findings/);
     assert.equal(d.querySelectorAll("#sources .source").length, 4);
     assert.equal(d.getElementById("download").hidden, false);
+    assert.ok(d.querySelectorAll("#report blockquote a[href^='http']").length>0,"Evidence quotes link to source pages");
   } else if (fixtures["/predict"]) {
     assert.equal(d.querySelectorAll("#models tr").length, 3);
     await submit(dom, "predict");

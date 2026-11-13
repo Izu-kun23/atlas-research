@@ -351,8 +351,10 @@ export async function runResearch(
   sources = await stage(
     "Analysis agent",
     "Ranked retrieved excerpts using TF-IDF similarity",
-    () => rankSources(topic, sources),
+    () => rankSources(topic, sources).filter(source => source.relevance > 0.01),
   );
+  if (!sources.length) throw new ResearchError(422, "Search services returned no sufficiently relevant excerpts. Try a more specific topic.");
+  for (const item of retrieval.coverage) item.selected = sources.filter(source=>source.provider===item.provider).length;
   const summary = await stage(
     "Summary agent",
     "Extracted source-supported findings",

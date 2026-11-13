@@ -45,7 +45,7 @@ function show(d) {
         `<div class="source"><span class="pill">${esc(s.id)}</span> <a href="${/^https?:\/\//.test(s.url) ? esc(s.url) : "#"}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a><p><a href="${/^https?:\/\//.test(s.url)?esc(s.url):"#"}" target="_blank" rel="noopener noreferrer">${esc(s.text)} ↗</a></p><span class="muted">${esc(s.provenance)} · relevance ${s.relevance}</span></div>`,
     )
     .join("");
-  $("coverage").textContent = d.source_coverage?.length ? "Search coverage: " + d.source_coverage.map(c=>c.provider+" — "+(c.status==="available"?c.retrieved+" results":"unavailable")).join(" · ") : "Source coverage was not recorded for this older report.";
+  $("coverage").textContent = d.source_coverage?.length ? "Search coverage: " + d.source_coverage.map(c=>c.provider+" — "+(c.status==="available"?c.retrieved+" results"+(c.selected!==undefined?", "+c.selected+" selected":""):"unavailable")).join(" · ") : "Source coverage was not recorded for this older report.";
   trace(d.trace);
   stats([
     ["Research stages", 5, "Five live research stages"],

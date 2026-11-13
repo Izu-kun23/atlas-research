@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-13",
+  "query": "retrieval augmented generation",
+  "deployment": "appgdep_6af709ad72cc81918ef2bfc50f6d6839",
+  "observed_status": "Research complete",
+  "provider_results": {
+    "Web search": 6,
+    "Crossref": 2,
+    "Europe PMC": 5,
+    "arXiv": 6,
+    "Wikipedia": 6
+  },
+  "evidence_quote_links": 4,
+  "note": "Observed from deployed UI after a real inference run. A later relevance gate excludes unrelated search snippets; result counts describe retrieval, not endorsement or exhaustive coverage."
+}
