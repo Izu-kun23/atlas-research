@@ -21,7 +21,7 @@ function trace(items = []) {
   $("trace").innerHTML = stages
     .map(([name, detail], i) => {
       const done = items.find((x) => x.agent === name);
-      return `<div class="step"><span class="stepicon">${done ? "✓" : String(i + 1).padStart(2, "0")}</span><div><strong>${name}</strong><p>${esc(done ? done.detail : detail)}</p>${done ? '<span class="muted">' + done.duration_ms + " ms</span>" : ""}</div></div>`;
+      return `<div class="step"><span class="stepicon">${done ? "✓" : String(i + 1).padStart(2, "0")}</span><div><strong>${name}</strong><p>${esc(done ? done.detail.replace(/NVIDIA/g,"model") : detail)}</p>${done ? '<span class="muted">' + done.duration_ms + " ms</span>" : ""}</div></div>`;
     })
     .join("");
 }
@@ -29,11 +29,11 @@ function show(d) {
   $("report").className = "report";
   $("report").innerHTML = d.report.replace(/\n## Inference record[\s\S]*?(?=\n## Limitations|$)/, "").replace(/^Mode:.*$|^Model:.*$/gm, "")
     .split("\n")
-    .map((line) => {
+    .map((line, index, lines) => {
       if (line.startsWith("# ")) return `<h2>${linked(line.slice(2), d.sources)}</h2>`;
       if (line.startsWith("## ")) return `<h3>${linked(line.slice(3), d.sources)}</h3>`;
       if (line.startsWith("> "))
-        return `<blockquote>${linked(line.slice(2), d.sources)}</blockquote>`;
+        { const id = lines[index-1]?.match(/\[(S\d+)\]/)?.[1]; const source=d.sources.find(s=>s.id===id); return `<blockquote>${source && /^https?:\/\//.test(source.url)?`<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(line.slice(2))} ↗</a>`:esc(line.slice(2))}</blockquote>`; }
       return line ? `<p>${linked(line, d.sources)}</p>` : "";
     })
     .join("");
