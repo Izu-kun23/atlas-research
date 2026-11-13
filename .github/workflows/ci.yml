@@ -12,6 +12,14 @@ jobs:
       - run: pip install -r requirements.lock
       - run: python -m pytest -q
       - run: python -m compileall -q app
+      - run: python -m app.experiments --output artifacts/ci
+      - run: python scripts/check_notebooks.py --execute
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reproducibility-records
+          path: artifacts/
+          retention-days: 7
+
       - uses: actions/setup-node@v4
         with:
           node-version: "24"

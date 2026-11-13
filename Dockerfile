@@ -1,7 +1,9 @@
 FROM python:3.12-slim
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+ARG SOURCE_COMMIT=unknown
+ENV SOURCE_COMMIT=$SOURCE_COMMIT
+COPY requirements-runtime.lock .
+RUN pip install --no-cache-dir -r requirements-runtime.lock
 COPY . .
 RUN useradd -m app && mkdir -p data && chown -R app:app /app
 USER app

@@ -11,7 +11,7 @@ Verified on 13 November 2026 with Python 3.12.
 
 ## Measured results
 
-Offline graph completes five stages, reviews four fixed source records and retains four extractive findings. Unknown source IDs and fabricated excerpts are rejected in regression tests. A mocked live entailment pass also filters unsupported interpretations. **No live NVIDIA inference request was executed**; NVIDIA_API_KEY is not configured. MockTransport tests verify the real SDK request URL, model, JSON response validation and source retrieval without API charges. No claim of general factual accuracy is made.
+Offline graph completes five stages, reviews four fixed source records and retains four extractive findings. Unknown source IDs and fabricated excerpts are rejected in regression tests. A mocked live entailment pass also filters unsupported interpretations. **At the original build**, no live NVIDIA inference request had been executed. Live credentials were configured and verified later; see docs/live-nvidia-validation.json. MockTransport tests verify the real SDK request URL, model, JSON response validation and source retrieval without API charges. No claim of general factual accuracy is made.
 
 ## Reproduce
 
@@ -20,3 +20,11 @@ Install `requirements.lock`, then run `python -m pytest -q`. Install Node 24+, r
 ## Notebook and Tailwind update
 
 Three substantive notebooks (16 executed code cells) now cover baseline analysis, deeper experiments and operational audits. All code cells executed with saved outputs; no error outputs remain. Tailwind CSS 4.3.5 builds successfully. DOM workflow checks pass after the UI changes. GitHub notebook inclusion is explicitly enabled without overriding its detected language; only compiler-generated CSS is marked generated.
+
+## MLOps update
+
+Release fingerprints, experiment gates, bounded operational telemetry and fresh-kernel notebook CI are implemented. Validation records are generated under ignored `artifacts/`; they are not claims that GitHub CI has executed. See `docs/mlops.md` for exact scope and deployment limits.
+
+Real hosted NVIDIA inference was subsequently verified with two completion IDs and six retrieved sources. The runtime key is held only in the private Site secret configuration.
+
+Final MLOps validation: 3 notebooks, 17 executed code cells; regression tests and project evaluation gates pass locally. Hosted Atlas uses real NVIDIA inference; provider completion IDs are recorded separately from mocked tests.

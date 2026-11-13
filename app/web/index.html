@@ -24,11 +24,7 @@
       </div>
       <p class="muted">Evidence-led research</p>
       <div class="navlabel">WORKSPACE</div>
-      <a class="navitem active" href="/">◈ &nbsp; Research workspace</a
-      ><a class="navitem" href="/docs">⌘ &nbsp; API explorer</a
-      ><a class="navitem" href="https://github.com/Izu-kun23/atlas-research"
-        >↗ &nbsp; Documentation</a
-      >
+      <nav aria-label="Main navigation"><a class="navitem active" href="#research" data-view="research">◈ &nbsp; Research</a><a class="navitem" href="#notebooks" data-view="notebooks">▤ &nbsp; Notebook lab</a><a class="navitem" href="#specs" data-view="specs">⌘ &nbsp; Specs</a></nav>
       <div class="asidefoot">
         <span class="avatar">IT</span
         ><strong style="font-size: 12px">Izuchukwu Tony</strong>
@@ -38,24 +34,24 @@
     <main class="min-h-screen">
       <header>
         <span
-          >Workspace &nbsp; / &nbsp; <strong>Research workspace</strong></span
-        ><span class="badge">● &nbsp; Local workspace</span>
+          >Workspace &nbsp; / &nbsp; <strong id="page-title">Research workspace</strong></span
+        ><span class="badge">● &nbsp; Private preview</span>
       </header>
-      <div class="intro">
+      <div id="research-view" class="page-view">      <div class="intro">
         <div>
           <div class="eyebrow">Evidence-led research</div>
-          <h1 class="tracking-tight text-slate-900">Research workspace</h1>
-          <div class="muted">Explore a question. Follow the evidence.</div>
+          <h1>From curiosity<br>to clarity.</h1>
+          <div class="muted">A focused workspace for questions worth investigating.</div>
         </div>
-        <span class="badge">Built for clarity. Engineered for depth.</span>
+        <a class="secondary" href="#notebooks">Explore the notebook lab ↗</a>
       </div>
-      <section class="stats tabular-nums" id="stats"></section>
+      <section class="stats" id="stats"></section>
       <div class="workspace-grid">
         <section>
           <div class="card">
             <div class="cardhead">
               <h2>Start an investigation</h2>
-              <span class="pill" id="mode">DEMO MODE</span>
+              <span id="mode" class="muted" role="status">Connecting…</span>
             </div>
             <p class="muted">
               Five specialized stages turn source material into a traceable
@@ -73,6 +69,24 @@ How can retrieval improve the reliability of language model research?</textarea>
                 ><button class="primary">Run research ↗</button>
               </div>
             </form>
+            <div class="suggestions">
+              <button
+                type="button"
+                data-topic="How does retrieval augmented generation work?"
+              >
+                Retrieval & generation</button
+              ><button
+                type="button"
+                data-topic="How does context position affect language model reliability?"
+              >
+                Context & reliability</button
+              ><button
+                type="button"
+                data-topic="How is information retrieval evaluated with BEIR and BM25?"
+              >
+                Ranking & evaluation
+              </button>
+            </div>
             <div id="status" class="status" role="status"></div>
           </div>
           <div class="card">
@@ -97,7 +111,7 @@ How can retrieval improve the reliability of language model research?</textarea>
           <div class="card">
             <div class="cardhead">
               <h2>Agent workflow</h2>
-              <span class="pill">LANGGRAPH</span>
+
             </div>
             <div id="trace"></div>
           </div>
@@ -106,19 +120,16 @@ How can retrieval improve the reliability of language model research?</textarea>
             <div id="history" class="muted">No reports yet.</div>
           </div>
           <div class="warning">
-            Demo mode uses a fixed corpus about retrieval and AI. Live mode uses
-            NVIDIA NIM with free Wikipedia source retrieval. It requires a
-            server-side NVIDIA API key. Evidence checks validate excerpts and
-            citations; they do not establish factual truth.
+            Reports are saved in the local application database. Follow each citation to inspect the original source. Evidence checks support your review; they do not guarantee factual accuracy.
           </div>
         </section>
       </div>
-      <footer>
-        Atlas / Engineering portfolio · Python + FastAPI ·
-        <a href="/docs">Explore the API ↗</a>
-      </footer>
+      </div><section id="notebooks-view" class="page-view" hidden><div class="intro"><div><div class="eyebrow">Notebook lab</div><h1>Inside the research.</h1><p class="muted">Executed experiments, visible results, reproducible methods.</p></div></div><div class="warning">Atlas uses pretrained models. These notebooks evaluate retrieval and evidence validation; they do not train or fine-tune the language model.</div><div id="notebook-content"></div></section>
+<section id="specs-view" class="page-view" hidden><div class="intro"><div><div class="eyebrow">System specifications</div><h1>Built to be inspected.</h1><p class="muted">The architecture, model and boundaries behind Atlas.</p></div></div><div class="spec-grid"><article class="card"><h2>Research engine</h2><dl><dt>Inference provider</dt><dd>NVIDIA NIM</dd><dt>Model</dt><dd>Nemotron 3.5 Lightning 30B A3B</dd><dt>Workflow</dt><dd>Source discovery → ranking → synthesis → evidence review → report</dd><dt>Live sources</dt><dd>Wikipedia excerpts, linked to original pages</dd></dl></article><article class="card"><h2>Engineering</h2><dl><dt>Python application</dt><dd>FastAPI, LangGraph, SQLite</dd><dt>Hosted preview</dt><dd>Server-side Worker with protected API credentials (hosted preview)</dd><dt>Interface</dt><dd>Tailwind CSS, responsive layouts, browser report history</dd><dt>Reproducibility</dt><dd>Versioned prompts, source snapshots, experiment gates and executed notebooks</dd></dl></article><article class="card"><h2>Evidence & limitations</h2><p class="muted">Quotes are checked against retrieved excerpts and reviewed in a second inference call. Relevance is not truth. Secondary sources may omit context. No model training is performed in this application.</p><a href="https://github.com/Izu-kun23/atlas-research" target="_blank" rel="noopener noreferrer">Read the technical documentation ↗</a></article></div></section>
+<footer>Atlas · Evidence-led research <a href="#specs">System specs ↗</a></footer>
     </main>
     <script src="/assets/common.js"></script>
-    <script src="/assets/app.js"></script>
+
+    <script src="/assets/notebooks.js"></script><script src="/assets/app.js"></script>
   </body>
 </html>

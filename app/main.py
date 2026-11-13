@@ -27,6 +27,7 @@ from fastapi.responses import Response
 from app.services.workflow import build_graph
 from app.infrastructure.repository import Reports
 from app.infrastructure.providers import model_name
+from app.ops import release_info, digest, canonical
 from openai import APIStatusError, APITimeoutError
 
 reports = Reports()
@@ -90,6 +91,15 @@ def run(body: Question):
         raise HTTPException(
             502, "Research failed. Check provider configuration and server logs."
         ) from exc
+    state["run_metadata"] = {
+        "release": release_info(),
+        "provider": "NVIDIA NIM" if mode == "live" else "extractive demonstration",
+        "model": model_name() if mode == "live" else None,
+        "prompt_sha256": digest(
+            (Path(__file__).parent / "infrastructure/providers.py").read_bytes()
+        ),
+        "source_snapshot_sha256": digest(canonical(state["sources"])),
+    }
     id = str(uuid.uuid4())
     reports.save(id, state)
     return {"id": id, **state}
@@ -113,3 +123,8 @@ def download(id: str):
         media_type="text/markdown",
         headers={"Content-Disposition": 'attachment; filename="research-report.md"'},
     )
+
+
+from app.ops import install_operations
+
+operations_store = install_operations(app)

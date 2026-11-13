@@ -1,0 +1,22 @@
+{
+  "verified_at": "2026-11-13",
+  "scope": "Real connectivity probe and hosted UI research run, not mocked providers",
+  "connectivity": {
+    "http_status": 200,
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "completion_id": "chatcmpl-c261e564-4528-40ec-8e6f-6744bda71df5",
+    "total_tokens": 34
+  },
+  "hosted_research": {
+    "topic": "Retrieval augmented generation",
+    "sources": 6,
+    "accepted_findings": 6,
+    "completion_ids": [
+      "chatcmpl-cf1b86a6-00d9-4439-8881-0eeb31d1e092",
+      "chatcmpl-d0e7c2a9-f088-4a29-b53d-820d8d04c78e"
+    ],
+    "source_commit": "28b728d8b872a2379d4e4c67b7c955dd9880ab6c",
+    "source_kind": "live Wikipedia API excerpts"
+  },
+  "credentials": "Runtime secret only; no key in this record"
+}

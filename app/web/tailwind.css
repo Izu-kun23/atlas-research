@@ -476,3 +476,10 @@ aside { @apply bg-white/95 backdrop-blur; }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
 
 }
+
+/* Atlas editorial workspace */
+[hidden]{display:none!important}
+.intro{padding:18px 0 12px}.intro h1{font-size:clamp(36px,4.6vw,64px);line-height:1.06;letter-spacing:-2.8px;font-weight:650;margin:16px 0 20px}
+.card{border-radius:24px}.card h2{font-weight:650}.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.spec-grid .card:last-child{grid-column:1/-1}
+dl{margin-top:24px}dt{font-size:11px;color:#758197;margin-top:20px}dd{margin:6px 0 0;font-size:14px;line-height:1.65}.citation{text-decoration:underline;text-underline-offset:4px}.notebook{margin-top:24px}.notebook h2{font-size:24px;margin-top:12px}.notebook details{margin-top:18px;border:1px solid #e7eaf1;border-radius:14px;overflow:hidden}.notebook summary{cursor:pointer;padding:16px;font-size:13px;font-weight:600;background:#f8faff}.notebook pre{overflow:auto;max-height:440px;padding:20px;font-size:11px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.notebook .code{background:#162038;color:#dbeafe}.notebook img{display:block;max-width:100%;height:auto;margin:16px auto}a:hover{text-decoration:underline}.source a{font-weight:600}footer{display:flex;justify-content:space-between}
+@media(max-width:640px){aside nav{display:flex;gap:4px;margin-top:14px}aside .navitem{display:flex;padding:10px;font-size:12px;margin:0}.spec-grid{grid-template-columns:1fr}.intro h1{font-size:42px}.intro{display:block}.intro>.secondary{margin:10px 0}.cardhead{flex-wrap:wrap}}

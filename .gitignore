@@ -8,3 +8,6 @@ data/*.joblib
 *.pyc
 .coverage
 node_modules/
+
+artifacts/
+data/*.db-*

@@ -26,7 +26,7 @@ async function create(fail = false) {
     fs.readFileSync(path.join(root, "app/web/common.js"), "utf8") +
       "\n" +
       fs.readFileSync(path.join(root, "app/web/app.js"), "utf8") +
-      "\nwindow.testEscape=esc;",
+      "\n"+fs.readFileSync(path.join(root,"app/web/notebooks.js"),"utf8")+"\nwindow.testEscape=esc;",
   );
   await wait();
   return dom;
@@ -77,6 +77,16 @@ async function submit(dom, id) {
     await wait();
     assert.match(d.getElementById("status").textContent, /complete/);
   }
+  dom.window.location.hash="notebooks";
+  dom.window.dispatchEvent(new dom.window.HashChangeEvent("hashchange"));
+  assert.equal(d.getElementById("notebooks-view").hidden,false);
+  assert.equal(d.querySelectorAll(".notebook").length,3);
+  assert.ok(d.querySelectorAll(".notebook img").length>0);
+  dom.window.location.hash="specs";
+  dom.window.dispatchEvent(new dom.window.HashChangeEvent("hashchange"));
+  assert.equal(d.getElementById("specs-view").hidden,false);
+  assert.equal(d.getElementById("research-view").hidden,true);
+  assert.ok(d.querySelectorAll("#report a[href^='http']").length>0);
   // External text must be escaped, not executed as markup.
   assert.equal(
     dom.window.testEscape("<img src=x onerror=alert(1)>"),

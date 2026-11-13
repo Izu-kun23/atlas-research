@@ -26,7 +26,7 @@ cd atlas-research
 python -m venv .venv
 source .venv/bin/activate
 # Windows PowerShell: .venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-runtime.lock
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
 ```
 
@@ -145,3 +145,11 @@ MIT · Izuchukwu Tony
 `deploy/sites/worker.mjs` mirrors the hosted Cloudflare Worker inference adapter. It retrieves Wikipedia excerpts and makes up to two real NVIDIA completions, returning completion identifiers and token usage with each report. The Worker keeps the key in the Sites runtime secret `NVIDIA_API_KEY`; the Python application uses the same variable on its server. Browser login alone does not provide a server credential.
 
 The private preview remains on the last working deployment until its server key is configured and a live call is verified. The adapter has no mock fallback in live mode.
+
+## MLOps operations
+
+See [the implemented operating model](docs/mlops.md) for versioned experiments, evaluation gates, notebook CI, runtime fingerprints, monitoring and rollback. Run `python -m app.experiments --output artifacts/release` for a reproducible offline release record. Operational endpoints: `/api/version` and `/api/ops`. Docker uses `requirements-runtime.lock`; analysis and tests use `requirements.lock`.
+
+### Research interface
+
+The Research workspace keeps the technical stack on a dedicated Specs page. Inline citations and source URLs open their original pages. The Notebook Lab displays the three executed Jupyter notebooks with saved outputs and charts; these evaluate retrieval and evidence checks, not language-model training.

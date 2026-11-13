@@ -1,0 +1,6 @@
+{
+  "minimum_monitoring_samples": 20,
+  "maximum_error_rate": 0.05,
+  "p95_latency_budget_ms": 180000,
+  "project": "atlas-research"
+}

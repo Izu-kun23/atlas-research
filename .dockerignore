@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+.venv
+node_modules
+artifacts
+__pycache__
+.pytest_cache
+data/*.db
+data/*.db-*
+*.tar.gz
