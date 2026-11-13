@@ -139,3 +139,9 @@ The UI includes responsive layouts, accessible form labels, loading/error states
 ## License
 
 MIT · Izuchukwu Tony
+
+## Hosted Sites adapter
+
+`deploy/sites/worker.mjs` mirrors the hosted Cloudflare Worker inference adapter. It retrieves Wikipedia excerpts and makes up to two real NVIDIA completions, returning completion identifiers and token usage with each report. The Worker keeps the key in the Sites runtime secret `NVIDIA_API_KEY`; the Python application uses the same variable on its server. Browser login alone does not provide a server credential.
+
+The private preview remains on the last working deployment until its server key is configured and a live call is verified. The adapter has no mock fallback in live mode.
