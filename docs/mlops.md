@@ -48,3 +48,7 @@ To roll back the Site, deploy its previous saved version through Sites without c
 6. Roll back on failed canaries or unexplained regressions. Start another evaluated experiment rather than retraining blindly.
 
 No automatic retraining, scheduled jobs, model promotion, public access change or new infrastructure purchase is configured. CI is configured in source; execution on GitHub depends on the account's Actions/billing status. Real-data governance, multi-user security, high availability, independent quality labels and larger-scale validation remain explicit deployment work.
+
+### Federated retrieval release
+
+Workflow `atlas-live-v1.2` adds five parallel source adapters, bounded XML/JSON reads, provider-isolated failures, stable citation IDs and DOI/URL deduplication. Every report records service availability and retrieved counts; an empty service result is distinct from an outage. Source snapshot hashes include provider provenance. Web snippets and abstracts are not full-text evidence. Deterministic adapter tests cover duplicate publications, unsafe links, partial outages and all-provider failure.

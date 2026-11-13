@@ -4,13 +4,13 @@ A bounded multi-stage research assistant that retrieves sources, ranks evidence,
 
 ![Executed notebook analysis](docs/analysis.png)
 
-**LangGraph orchestration · TF-IDF retrieval · NVIDIA NIM inference · keyless Wikipedia retrieval · SQLite report history**
+**LangGraph orchestration · TF-IDF retrieval · NVIDIA NIM inference · federated source retrieval · SQLite report history**
 
 ## What it does
 
 - Five explicit LangGraph nodes with duration traces and bounded execution.
 - Offline mode runs without credentials using a clearly labelled fixed retrieval/AI corpus.
-- Live mode retrieves real Wikipedia introductory excerpts without a search key, then uses NVIDIA Nemotron to summarize and review them. Source links include revision IDs when available.
+- Live mode searches the wider web, Crossref publication abstracts, Europe PMC literature, arXiv preprints and Wikipedia references, then uses NVIDIA Nemotron to summarize and review retrieved evidence. Every record includes its original URL and provenance.
 - Live mode adds a separate LLM entailment review after deterministic excerpt validation. This is a conservative second pass, not a guarantee of truth.
 - Verifier rejects nonexistent source IDs and quotations absent from source records.
 - Dashboard includes source provenance, recent investigations and Markdown export.
@@ -98,11 +98,11 @@ PowerShell: use `$env:NVIDIA_API_KEY='...'`, `$env:NVIDIA_MODEL='...'` and `$env
 
 The model's [NVIDIA catalog page](https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b/build) lists a free endpoint as of 13 November 2026. Free prototype access is account- and rate-limited; availability can change. This is not a promise of unlimited free production hosting. There is **no automatic paid-provider fallback** and no OpenAI service call. The `openai` package is only an OpenAI-compatible HTTP client pointed at `https://integrate.api.nvidia.com/v1`.
 
-Each live run makes one keyless Wikipedia retrieval request and up to two NVIDIA completions: summary and independent entailment review. Requests have token, source-size and timeout budgets, and do not automatically retry model calls. A missing key returns a setup error; exhausted access and rate limits return clear messages without exposing credentials. Keys stay on the server and must never be committed.
+Each live run makes one federated source retrieval request and up to two NVIDIA completions: summary and independent entailment review. Requests have token, source-size and timeout budgets, and do not automatically retry model calls. A missing key returns a setup error; exhausted access and rate limits return clear messages without exposing credentials. Keys stay on the server and must never be committed.
 
-Free source retrieval searches **English Wikipedia only**, not the entire web. Introductory excerpts are secondary evidence and may be incomplete or unsuitable for recent/niche questions. Original source URLs and revision timestamps are preserved. A zero-result search fails explicitly; the model cannot fabricate substitute citations.
+Source retrieval searches **Bing public web-search RSS, Crossref, Europe PMC, arXiv and Wikipedia**. Web results can include official documentation, government pages, news and other indexed websites. Coverage is bounded by each index and service availability; this is not access to every website. Bing RSS is a best-effort public feed, not a contracted search API. Reports expose per-service status and result counts. Abstracts and snippets are clearly labelled; full articles and pages are not automatically fetched. Partial outages preserve available evidence, and a total outage fails explicitly.
 
-The local retrieval layer uses sparse TF-IDF, not an embedding database. The specialized agents are bounded processing roles in a graph, not autonomous agents with arbitrary tools. Demo findings are extractive paraphrases. Live evidence consists of real introductory excerpts from the Wikipedia API, bounded to six sources of 3,500 characters each. Exact quote validation establishes provenance, not semantic entailment or factual truth. Small excerpts can omit context. No fake confidence score is presented.
+The local retrieval layer uses sparse TF-IDF, not an embedding database. The specialized agents are bounded processing roles in a graph, not autonomous agents with arbitrary tools. Demo findings are extractive paraphrases. Live evidence is bounded to twelve diverse sources of 3,500 characters each, selected round-robin across available providers with DOI/URL deduplication before relevance ranking. Exact quote validation establishes provenance, not semantic entailment or factual truth. Small excerpts can omit context. No fake confidence score is presented.
 
 Local persistence lives in `data/`; runtime database/model files and secrets are excluded from git. Configuration variables are described in `.env.example`.
 
@@ -142,7 +142,7 @@ MIT · Izuchukwu Tony
 
 ## Hosted Sites adapter
 
-`deploy/sites/worker.mjs` mirrors the hosted Cloudflare Worker inference adapter. It retrieves Wikipedia excerpts and makes up to two real NVIDIA completions, returning completion identifiers and token usage with each report. The Worker keeps the key in the Sites runtime secret `NVIDIA_API_KEY`; the Python application uses the same variable on its server. Browser login alone does not provide a server credential.
+`deploy/sites/worker.mjs` mirrors the hosted Cloudflare Worker inference adapter. It retrieves federated source excerpts and makes up to two real NVIDIA completions, returning completion identifiers and token usage with each report. The Worker keeps the key in the Sites runtime secret `NVIDIA_API_KEY`; the Python application uses the same variable on its server. Browser login alone does not provide a server credential.
 
 The private preview remains on the last working deployment until its server key is configured and a live call is verified. The adapter has no mock fallback in live mode.
 

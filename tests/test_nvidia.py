@@ -126,7 +126,7 @@ def test_wikipedia_preserves_real_excerpts_and_revisions(monkeypatch):
             **kwargs, transport=httpx.MockTransport(handle), trust_env=False
         ),
     )
-    records = sources.search_sources("What is retrieval?")
+    records = sources.wikipedia("What is retrieval?")
     assert records[0]["url"] == "https://en.wikipedia.org/w/index.php?oldid=123"
     assert records[0]["text"].startswith("A real introductory")
     assert records[0]["revision_timestamp"] == "2026-11-13T00:00:00Z"
@@ -143,7 +143,7 @@ def test_empty_search_never_invents_sources(monkeypatch):
             trust_env=False
         ),
     )
-    with pytest.raises(ValueError, match="No source excerpts"):
+    with pytest.raises(ValueError, match="No source service"):
         sources.search_sources("unfindable topic")
 
 

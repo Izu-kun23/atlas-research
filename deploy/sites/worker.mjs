@@ -2,7 +2,7 @@
 
 const MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b";
 const NVIDIA_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
-const WORKFLOW_VERSION = "atlas-live-v1.1";
+const WORKFLOW_VERSION = "atlas-live-v1.2";
 const PROMPT_VERSION = "evidence-summary-review-v1";
 
 async function timedFetch(fetcher, url, options, milliseconds) {
@@ -112,7 +112,7 @@ export function rankSources(topic, sources) {
     }))
     .sort((a, b) => b.relevance - a.relevance);
 }
-async function retrieve(topic, fetcher) {
+async function wikipedia(topic, fetcher) {
   const params = new URLSearchParams({
     action: "query",
     format: "json",
@@ -180,6 +180,58 @@ async function retrieve(topic, fetcher) {
       "No source excerpts found. Try a concise topic such as retrieval augmented generation.",
     );
   return sources;
+}
+
+function cleanText(value) {
+ return String(value || "").replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,"$1").replace(/<[^>]*>/g," ").replace(/&(?:amp|lt|gt|quot|apos);/g,x=>({"&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&apos;":"'"})[x]).replace(/&#(x[0-9a-f]+|\d+);/gi,(_,n)=>{const v=n[0].toLowerCase()==="x"?parseInt(n.slice(1),16):Number(n);return v>0&&v<=0x10ffff?String.fromCodePoint(v):"";}).replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+}
+function safeSourceURL(value) {
+ try {const u=new URL(value); return ["http:","https:"].includes(u.protocol)&&!u.username&&!u.password&&!u.hostname.endsWith(".local")&&!/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|\[|0\.)/i.test(u.hostname)?u.href:null;}catch{return null;}
+}
+async function sourceBody(fetcher,url,xml=false){
+ const response=await timedFetch(fetcher,url,{headers:{"User-Agent":"AtlasResearch/1.0 (https://github.com/Izu-kun23/atlas-research)",Accept:xml?"application/rss+xml, application/atom+xml, application/xml":"application/json"},redirect:"manual"},12000);
+ if(!response.ok)throw Error("Source service unavailable");
+ if(!xml)return boundedJSON(response,2000000);
+ // Read incrementally; never expand XML entities or follow document declarations.
+ const reader=response.body.getReader();let size=0;const chunks=[];
+ try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>2000000)throw Error("Source response too large");chunks.push(value);}}finally{await reader.cancel();}
+ const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+ const body=new TextDecoder().decode(bytes);if(/<!DOCTYPE|<!ENTITY/i.test(body))throw Error("Unsafe XML");return body;
+}
+function xmlValue(item,tag){return cleanText(item.match(new RegExp("<"+tag+"(?:\\s[^>]*)?>([\\s\\S]*?)</"+tag+">","i"))?.[1]);}
+export async function retrieveSources(topic,fetcher){
+ const definitions=[
+  ["Web search",async()=>{
+   const xml=await sourceBody(fetcher,"https://www.bing.com/search?"+new URLSearchParams({q:topic,format:"rss",count:"6"}),true);
+   if(!/<rss[\s>]/i.test(xml))throw Error("Search feed unavailable");
+   return [...xml.matchAll(/<item[\s>]([\s\S]*?)<\/item>/gi)].slice(0,6).map(m=>({title:xmlValue(m[1],"title"),url:xmlValue(m[1],"link"),text:xmlValue(m[1],"description"),provenance:"Bing public search RSS excerpt; search snippet, full page not retrieved"}));
+  }],
+  ["Crossref",async()=>{
+   const data=await sourceBody(fetcher,"https://api.crossref.org/works?"+new URLSearchParams({query:topic,rows:"6",select:"DOI,title,abstract,URL"}));
+   return (data.message?.items||[]).filter(x=>x.abstract).map(x=>({title:x.title?.[0],url:x.URL||"https://doi.org/"+x.DOI,text:cleanText(x.abstract),doi:x.DOI,provenance:"Crossref publisher-deposited abstract; full article not retrieved"}));
+  }],
+  ["Europe PMC",async()=>{
+   const data=await sourceBody(fetcher,"https://www.ebi.ac.uk/europepmc/webservices/rest/search?"+new URLSearchParams({query:topic,format:"json",pageSize:"6",resultType:"core"}));
+   return (data.resultList?.result||[]).filter(x=>x.abstractText).map(x=>({title:x.title,url:x.doi?"https://doi.org/"+x.doi:"https://europepmc.org/article/"+encodeURIComponent(x.source)+"/"+encodeURIComponent(x.id),text:cleanText(x.abstractText),doi:x.doi,provenance:"Europe PMC indexed publication abstract; full article not retrieved"}));
+  }],
+  ["arXiv",async()=>{
+   const query=topic.match(/[a-z0-9]+/gi)?.slice(0,12).join(" ")||topic;
+   const xml=await sourceBody(fetcher,"https://export.arxiv.org/api/query?"+new URLSearchParams({search_query:"all:"+query,start:"0",max_results:"6",sortBy:"relevance"}),true);
+   if(!/<feed[\s>]/i.test(xml))throw Error("Preprint feed unavailable");
+   return [...xml.matchAll(/<entry[\s>]([\s\S]*?)<\/entry>/gi)].map(m=>({title:xmlValue(m[1],"title"),url:xmlValue(m[1],"id").replace(/^http:/,"https:"),text:xmlValue(m[1],"summary"),provenance:"arXiv preprint abstract; not necessarily peer reviewed"}));
+  }],
+  ["Wikipedia",()=>wikipedia(topic,fetcher)]
+ ];
+ const coverage=[];
+ const groups=await Promise.all(definitions.map(async([provider,run])=>{
+  try{const rows=(await run()).map(x=>({...x,title:cleanText(x.title),text:cleanText(x.text).slice(0,3500),url:safeSourceURL(x.url),provider})).filter(x=>x.url&&x.title&&x.text.length>=40);coverage.push({provider,status:"available",retrieved:rows.length});return rows;}
+  catch{coverage.push({provider,status:"unavailable",retrieved:0});return [];}
+ }));
+ const sources=[],seen=new Set();
+ // Round robin preserves source diversity before local relevance ranking.
+ for(let i=0;i<6&&sources.length<12;i++)for(const rows of groups){const x=rows[i];if(!x||sources.length>=12)continue;const key=x.doi?.toLowerCase()||x.url.replace(/\/$/,"");if(seen.has(key))continue;seen.add(key);sources.push({...x,id:"S"+(sources.length+1)});}
+ if(!sources.length)throw new ResearchError(502,"No source service returned usable evidence. Please retry with a shorter topic.");
+ return {sources,coverage:definitions.map(([name])=>coverage.find(c=>c.provider===name))};
 }
 async function completion(env, system, input, fetcher) {
   const response = await timedFetch(
@@ -290,11 +342,12 @@ export async function runResearch(
       );
     }
   }
-  let sources = await stage(
+  const retrieval = await stage(
     "Research agent",
-    "Retrieved live Wikipedia source excerpts",
-    () => retrieve(topic.trim(), fetcher),
+    "Searched web, publications, preprints and reference sources",
+    () => retrieveSources(topic.trim(), fetcher),
   );
+  let sources = retrieval.sources;
   sources = await stage(
     "Analysis agent",
     "Ranked retrieved excerpts using TF-IDF similarity",
@@ -404,7 +457,7 @@ export async function runResearch(
         "Source snapshot SHA-256: " + sourceHash,
         "",
         "## Limitations",
-        "Retrieved Wikipedia excerpts are secondary evidence and may omit important context. Exact quote validation and a second model review do not establish factual truth. Consult original references before relying on findings.",
+        "Evidence may include web search snippets, publication abstracts, unreviewed preprints and reference excerpts. Full webpages and articles are not automatically retrieved. Provider outages and search indexes limit coverage; no search covers the entire internet. Exact quote validation and a second model review do not establish factual truth. Consult original references before relying on findings.",
       ].join("\n"),
   );
   console.info(
@@ -430,6 +483,7 @@ export async function runResearch(
     mode: "live",
     sources,
     findings,
+    source_coverage: retrieval.coverage,
     trace,
     report,
     inference,

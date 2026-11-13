@@ -18,9 +18,16 @@ def event(state, node, detail, start):
 
 def retrieve(state):
     start = time.perf_counter()
-    sources = research(state["topic"], state["mode"])
+    coverage = []
+    if state["mode"] == "live":
+        from app.infrastructure.sources import search_with_coverage
+
+        sources, coverage = search_with_coverage(state["topic"])
+    else:
+        sources = research(state["topic"], state["mode"])
     return {
         "sources": sources,
+        "source_coverage": coverage,
         "trace": event(
             state, "Research agent", f"Retrieved {len(sources)} source records", start
         ),
@@ -64,7 +71,7 @@ def summarize(state):
             for s in state["sources"][:4]
         ]
     else:
-        findings = synthesize(state["topic"], state["sources"][:6])
+        findings = synthesize(state["topic"], state["sources"][:12])
     return {
         "findings": findings,
         "trace": event(
@@ -140,7 +147,7 @@ def report(state):
         [
             "",
             "## Limitations",
-            "Offline demo uses a fixed retrieval-focused corpus and extractive summaries. Live mode retrieves Wikipedia introductory excerpts and uses NVIDIA NIM for synthesis and a separate entailment review. Wikipedia is a secondary source; coverage and excerpts can be incomplete. Evidence matching and model review do not establish real-world truth. No tools are invoked by source text.",
+            "Offline demo uses a fixed retrieval-focused corpus and extractive summaries. Live mode searches web snippets, publication abstracts, preprints and reference excerpts. Full pages and articles are not automatically retrieved. Provider outages and index limitations mean coverage is incomplete. Evidence matching and model review do not establish real-world truth. No tools are invoked by source text.",
         ]
     )
     return {

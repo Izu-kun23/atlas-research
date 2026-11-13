@@ -45,7 +45,7 @@ def config():
         "live_ready": bool(os.getenv("NVIDIA_API_KEY", "").strip()),
         "provider": "NVIDIA NIM",
         "model": model_name(),
-        "source_provider": "Wikipedia API (no search key required)",
+        "source_provider": "Web search RSS, Crossref, Europe PMC, arXiv and Wikipedia",
         "stages": 5,
     }
 

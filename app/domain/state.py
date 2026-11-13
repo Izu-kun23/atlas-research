@@ -9,3 +9,4 @@ class ResearchState(TypedDict, total=False):
     report: str
     trace: list[dict]
     verification: dict
+    source_coverage: list[dict]

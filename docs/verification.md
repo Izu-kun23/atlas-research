@@ -28,3 +28,7 @@ Release fingerprints, experiment gates, bounded operational telemetry and fresh-
 Real hosted NVIDIA inference was subsequently verified with two completion IDs and six retrieved sources. The runtime key is held only in the private Site secret configuration.
 
 Final MLOps validation: 3 notebooks, 17 executed code cells; regression tests and project evaluation gates pass locally. Hosted Atlas uses real NVIDIA inference; provider completion IDs are recorded separately from mocked tests.
+
+## Federated source release
+
+21 Python tests and 11 Worker tests passed. UI checks passed for reports, source links, notebook outputs and Specs navigation. The updated audit notebook executed eight code cells. Live endpoint probes confirmed HTTP 200 from web-search RSS, Crossref and Europe PMC; deployed-provider coverage is recorded with the live canary separately.
