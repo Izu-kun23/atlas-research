@@ -33,7 +33,7 @@ function show(d) {
       if (line.startsWith("# ")) return `<h2>${linked(line.slice(2), d.sources)}</h2>`;
       if (line.startsWith("## ")) return `<h3>${linked(line.slice(3), d.sources)}</h3>`;
       if (line.startsWith("> "))
-        { const id = lines[index-1]?.match(/\[(S\d+)\]/)?.[1]; const source=d.sources.find(s=>s.id===id); return `<blockquote>${source && /^https?:\/\//.test(source.url)?`<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(line.slice(2))} ↗</a>`:esc(line.slice(2))}</blockquote>`; }
+        { const id = lines.slice(0,index).filter(x=>x.trim()).at(-1)?.match(/\[(S\d+)\]/)?.[1]; const source=d.sources.find(s=>s.id===id); return `<blockquote>${source && /^https?:\/\//.test(source.url)?`<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(line.slice(2))} ↗</a>`:esc(line.slice(2))}</blockquote>`; }
       return line ? `<p>${linked(line, d.sources)}</p>` : "";
     })
     .join("");
