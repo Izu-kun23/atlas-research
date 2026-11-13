@@ -79,7 +79,7 @@ export function rankSources(topic, sources) {
     "and",
     "in",
     "for",
-    "with",
+    "with", "who", "why", "when", "where", "which", "about", "explain", "tell", "me", "should", "would", "could", "do", "please",
   ]);
   const tokenize = (text) =>
     text
