@@ -1,0 +1,30 @@
+[
+  {
+    "id": "S1",
+    "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+    "url": "https://arxiv.org/abs/2005.11401",
+    "text": "Retrieval-augmented generation combines parametric and non-parametric memory for language generation. The original RAG paper evaluates retrieval-augmented models on knowledge-intensive tasks.",
+    "provenance": "Curated demonstration paraphrase; consult original source"
+  },
+  {
+    "id": "S2",
+    "title": "Lost in the Middle: How Language Models Use Long Contexts",
+    "url": "https://arxiv.org/abs/2307.03172",
+    "text": "Language model performance can vary with the position of relevant information in the input context. Lost in the Middle studies this effect using multi-document question answering and key-value retrieval.",
+    "provenance": "Curated demonstration paraphrase; consult original source"
+  },
+  {
+    "id": "S3",
+    "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+    "url": "https://arxiv.org/abs/2104.08663",
+    "text": "BEIR provides a heterogeneous benchmark for evaluating information retrieval models. The benchmark includes diverse retrieval tasks and domains.",
+    "provenance": "Curated demonstration paraphrase; consult original source"
+  },
+  {
+    "id": "S4",
+    "title": "The Probabilistic Relevance Framework: BM25 and Beyond",
+    "url": "https://doi.org/10.1561/1500000019",
+    "text": "BM25 is a ranking function within the probabilistic relevance framework. It incorporates term frequency saturation and document length normalization.",
+    "provenance": "Curated demonstration paraphrase; consult original source"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "name": "atlas-research-ui-checks",
+  "private": true,
+  "scripts": {
+    "test:ui": "node tests/ui.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "31.0.1"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "/config": {
+    "mode": "demo",
+    "live_ready": false,
+    "stages": 5
+  },
+  "/reports": [],
+  "/research": {
+    "id": "70834053-ebbd-4876-95d6-104cfad84fb6",
+    "topic": "How does retrieval improve research reliability?",
+    "mode": "demo",
+    "sources": [
+      {
+        "id": "S3",
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "text": "BEIR provides a heterogeneous benchmark for evaluating information retrieval models. The benchmark includes diverse retrieval tasks and domains.",
+        "provenance": "Curated demonstration paraphrase; consult original source",
+        "relevance": 0.081
+      },
+      {
+        "id": "S1",
+        "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+        "url": "https://arxiv.org/abs/2005.11401",
+        "text": "Retrieval-augmented generation combines parametric and non-parametric memory for language generation. The original RAG paper evaluates retrieval-augmented models on knowledge-intensive tasks.",
+        "provenance": "Curated demonstration paraphrase; consult original source",
+        "relevance": 0.0621
+      },
+      {
+        "id": "S2",
+        "title": "Lost in the Middle: How Language Models Use Long Contexts",
+        "url": "https://arxiv.org/abs/2307.03172",
+        "text": "Language model performance can vary with the position of relevant information in the input context. Lost in the Middle studies this effect using multi-document question answering and key-value retrieval.",
+        "provenance": "Curated demonstration paraphrase; consult original source",
+        "relevance": 0.0348
+      },
+      {
+        "id": "S4",
+        "title": "The Probabilistic Relevance Framework: BM25 and Beyond",
+        "url": "https://doi.org/10.1561/1500000019",
+        "text": "BM25 is a ranking function within the probabilistic relevance framework. It incorporates term frequency saturation and document length normalization.",
+        "provenance": "Curated demonstration paraphrase; consult original source",
+        "relevance": 0.0
+      }
+    ],
+    "findings": [
+      {
+        "claim": "BEIR provides a heterogeneous benchmark for evaluating information retrieval models.",
+        "source_id": "S3",
+        "evidence": "BEIR provides a heterogeneous benchmark for evaluating information retrieval models.",
+        "verification": "Citation and verbatim evidence validated; semantic truth not independently verified"
+      },
+      {
+        "claim": "Retrieval-augmented generation combines parametric and non-parametric memory for language generation.",
+        "source_id": "S1",
+        "evidence": "Retrieval-augmented generation combines parametric and non-parametric memory for language generation.",
+        "verification": "Citation and verbatim evidence validated; semantic truth not independently verified"
+      },
+      {
+        "claim": "Language model performance can vary with the position of relevant information in the input context.",
+        "source_id": "S2",
+        "evidence": "Language model performance can vary with the position of relevant information in the input context.",
+        "verification": "Citation and verbatim evidence validated; semantic truth not independently verified"
+      },
+      {
+        "claim": "BM25 is a ranking function within the probabilistic relevance framework.",
+        "source_id": "S4",
+        "evidence": "BM25 is a ranking function within the probabilistic relevance framework.",
+        "verification": "Citation and verbatim evidence validated; semantic truth not independently verified"
+      }
+    ],
+    "report": "# How does retrieval improve research reliability?\n\nMode: demo\n\n## Findings\n\nBEIR provides a heterogeneous benchmark for evaluating information retrieval models. [S3]\n> BEIR provides a heterogeneous benchmark for evaluating information retrieval models.\n\nRetrieval-augmented generation combines parametric and non-parametric memory for language generation. [S1]\n> Retrieval-augmented generation combines parametric and non-parametric memory for language generation.\n\nLanguage model performance can vary with the position of relevant information in the input context. [S2]\n> Language model performance can vary with the position of relevant information in the input context.\n\nBM25 is a ranking function within the probabilistic relevance framework. [S4]\n> BM25 is a ranking function within the probabilistic relevance framework.\n\n## Sources\n\n[S3] BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models \u2014 https://arxiv.org/abs/2104.08663\n[S1] Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks \u2014 https://arxiv.org/abs/2005.11401\n[S2] Lost in the Middle: How Language Models Use Long Contexts \u2014 https://arxiv.org/abs/2307.03172\n[S4] The Probabilistic Relevance Framework: BM25 and Beyond \u2014 https://doi.org/10.1561/1500000019\n\n## Limitations\nOffline demo uses a fixed retrieval-focused corpus and extractive summaries. Live findings use provider-cited excerpts. Excerpt validation establishes provenance, not semantic entailment or real-world truth. No autonomous browsing or tool execution from source text.",
+    "trace": [
+      {
+        "agent": "Research agent",
+        "detail": "Retrieved 4 source records",
+        "duration_ms": 0.11
+      },
+      {
+        "agent": "Analysis agent",
+        "detail": "Ranked evidence with local TF-IDF retrieval",
+        "duration_ms": 2.31
+      },
+      {
+        "agent": "Summary agent",
+        "detail": "Prepared 4 candidate findings",
+        "duration_ms": 0.03
+      },
+      {
+        "agent": "Evidence-check agent",
+        "detail": "4 accepted; 0 rejected",
+        "duration_ms": 0.03
+      },
+      {
+        "agent": "Report agent",
+        "detail": "Composed report with source identifiers and limitations",
+        "duration_ms": 0.01
+      }
+    ],
+    "verification": {
+      "accepted": 4,
+      "rejected": 0,
+      "scope": "Citation existence and exact excerpt matching; not independent factual verification"
+    }
+  }
+}
